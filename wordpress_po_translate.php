@@ -30,12 +30,12 @@ $file_to_translate_url = get_theme_root_uri() . '/' . $theme_name . '/' . $trans
 //translate api url (using yandex API)
 $translate_api_url = 'https://translate.yandex.net/api/v1.5/tr.json/translate';
 //generate your API key on https://translate.yandex.com/developers
-$translate_api_key = 'trnsl.1.1.20180713T165642Z.25f18a5c7b62335b.6f60e0b1581cedfa7e9337eff2711592dbe4e70c';
+$translate_api_key = 'YOUR_API_KEY';
 //set language to translate
 $translate_api_lang = 'pt';
 
 //create new file with translations
-$new_file_url = fopen("newfile.po", "w") or die("Unable to open file!");
+$new_file_url = fopen("translated.po", "w") or die("Unable to open file!");
 //get original file content
 $file = fopen($file_to_translate_url, "r");
 
@@ -89,9 +89,9 @@ fclose($new_file_url);
  * Download new .po file
  */
 header('Content-Type: application/octet-stream');
-header('Content-Disposition: attachment; filename='.basename('newfile.po'));
+header('Content-Disposition: attachment; filename='.basename('translated.po'));
 header('Expires: 0');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
-header('Content-Length: ' . filesize('newfile.po'));
-readfile('newfile.po');
+header('Content-Length: ' . filesize('translated.po'));
+readfile('translated.po');
