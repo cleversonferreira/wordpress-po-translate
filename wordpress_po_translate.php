@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @author Cleverson Franco
- * @date 07/13/2018
+ * @author Cleverson Franco <cleverson_reisferreira@hotmail.com>
  */
 
 /**
@@ -12,10 +11,11 @@ require_once('wp-config.php');
 require_once(ABSPATH . 'wp-includes/wp-db.php');
 require_once(ABSPATH . 'wp-admin/includes/taxonomy.php');
 
+echo 'getting configs ...' . PHP_EOL;
+
 /**
  * Config vars
  */
-
 $matches = array();
 //theme name
 $theme_name = 'THEME_NAME';
@@ -36,10 +36,14 @@ $translate_api_key = 'YOUR_API_KEY';
 //set language to translate
 $translate_api_lang = 'pt';
 
+echo 'creating new file ...' . PHP_EOL;
+
 //create new file with translations
 $new_file_url = fopen("translated.po", "w") or die("Unable to open file!");
 //get original file content
 $file = fopen($file_to_translate_url, "r");
+
+echo 'processing ...' . PHP_EOL;
 
 //read all file line
 while (!feof($file)) {
@@ -72,11 +76,19 @@ while (!feof($file)) {
 
         //if error, use original line
         if ($err) {
+
+            echo '===============================' . PHP_EOL;
+            echo $err . PHP_EOL;
+            echo '===============================' . PHP_EOL;
+
             fwrite($new_file_url, "msgid \"$matches[2]\"\n");
             fwrite($new_file_url, "msgstr \"\"\n");
         }else {
             $translated = json_decode($response);
             $translated = $translated->text[0];
+
+            echo '- translating (' . $matches[2] . ') --> (' . $translated . ')' . PHP_EOL;
+
             fwrite($new_file_url, "msgid \"$matches[2]\"\n");
             fwrite($new_file_url, "msgstr \"$translated\"\n");
         }
@@ -91,13 +103,4 @@ while (!feof($file)) {
 //close new file
 fclose($new_file_url);
 
-/**
- * Download new .po file
- */
-header('Content-Type: application/octet-stream');
-header('Content-Disposition: attachment; filename='.basename('translated.po'));
-header('Expires: 0');
-header('Cache-Control: must-revalidate');
-header('Pragma: public');
-header('Content-Length: ' . filesize('translated.po'));
-readfile('translated.po');
+echo 'process complete ...' . PHP_EOL;
