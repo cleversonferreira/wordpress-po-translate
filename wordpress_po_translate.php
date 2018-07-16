@@ -18,13 +18,15 @@ require_once(ABSPATH . 'wp-admin/includes/taxonomy.php');
 
 $matches = array();
 //theme name
-$theme_name = 'classify';
+$theme_name = 'THEME_NAME';
 //path from the root of the theme, don't put '/' at the beginning or end of the path
 $translate_file_folder = 'languages';
 //name of the .po file to be translated, the .po extension will be added automatically.
 $translate_po_file_name = 'en_US';
 //pattern to get text to translate
-$pattern = "/^(msgid ['|\"](.+)['|\"])/";
+$patternId = "/^(msgid ['|\"](.+)['|\"])/";
+//pattern to get location to past translated text
+$patternStr = "/^(msgstr ['|\"]['|\"])/";
 //path to .po file to translate
 $file_to_translate_url = get_theme_root_uri() . '/' . $theme_name . '/' . $translate_file_folder . '/' . $translate_po_file_name . '.po';
 //translate api url (using yandex API)
@@ -44,7 +46,7 @@ while (!feof($file)) {
     $line = fgets($file);
 
     //if regex match
-    if(preg_match($pattern,$line,$matches)) {
+    if(preg_match($patternId,$line,$matches)) {
 
         //connect to translate api
         $curl = curl_init();
@@ -71,14 +73,18 @@ while (!feof($file)) {
         //if error, use original line
         if ($err) {
             fwrite($new_file_url, "msgid \"$matches[2]\"\n");
+            fwrite($new_file_url, "msgstr \"\"\n");
         }else {
             $translated = json_decode($response);
             $translated = $translated->text[0];
-            fwrite($new_file_url, "msgid \"$translated\"\n");
+            fwrite($new_file_url, "msgid \"$matches[2]\"\n");
+            fwrite($new_file_url, "msgstr \"$translated\"\n");
         }
 
     }else{
-        fwrite($new_file_url, $line);
+        if(!preg_match($patternStr,$line,$matches)) {
+            fwrite($new_file_url, $line);
+        }
     }
 }
 
