@@ -24,3 +24,4 @@ Script to translate .po file to pt or other language using Yandex API
 ** Important
 - This script does not convert to .mo (a good opportunity for a fork). Use an online converter.
 - Some lines may not be translated, so check the file.
+- Use Loco Translate plugin (https://br.wordpress.org/plugins/loco-translate/) to help generate the translation file (if it does not exist) and word correction
