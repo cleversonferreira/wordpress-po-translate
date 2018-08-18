@@ -17,7 +17,7 @@ Script to translate .po file to pt or other language using Yandex API
 - set language to translate
   $translate_api_lang = 'pt';
 
-- Run file www.yourwebsite.com/wordpress-po-translate.php
+- Run file
 
 - A .po file will be automatically downloaded with the translated version
 
